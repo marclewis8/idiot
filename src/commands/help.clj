@@ -11,4 +11,6 @@
       (= flag-or-cmd "init") (println hmsg/init-h-message)
       (= flag-or-cmd "hash-object") (println hmsg/hash-h-message)
       (= flag-or-cmd "cat-file") (println hmsg/cat-h-message)
+      (= flag-or-cmd "write-wtree") (println hmsg/write-h-message)
+      (= flag-or-cmd "commit-tree") (println hmsg/commit-tree-h-message)
       :else (println "Error: invalid command"))))
