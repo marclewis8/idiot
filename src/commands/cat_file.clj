@@ -5,6 +5,8 @@
             [commands.utils.help-docs :as hmsg])
   (:import java.io.File))
 
+(declare find-type)
+
 (defn cat-file [dir dbase args]
   ; working off of arity 2
   (let [[flag address] args]
@@ -30,8 +32,15 @@
                   type (first (str/split type+length (re-pattern " ")))
                   contents-header-removed (second split-contents)
                   contents (str/join contents-header-removed)
-                  contents-newline-trimmed (clojure.string/trim-newline contents)]
+                  contents-newline-trimmed (clojure.string/trim-newline contents)
+                  targ-path (str dir File/separator dbase File/separator "objects" File/separator dirname File/separator fname)]
               (case flag
                 "-p" (println contents-newline-trimmed)
-                "-t" (println type)
+                "-t" (println (find-type (tool/byte-unzip targ-path)))
                 )))))))) ; this is what I want
+
+(defn to-string [byte-seq]
+  (clojure.string/join (map char byte-seq)))
+
+(defn find-type [input]
+  (to-string (first (tool/split-at-byte 32 input))))
