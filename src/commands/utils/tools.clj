@@ -85,3 +85,10 @@
   (let [part1 (take-while (partial not= b) bytes)
         part2 (nthrest bytes (-> part1 count inc))]
     [part1 part2]))
+
+(defn to-string [byte-seq]
+  (clojure.string/join (map char byte-seq)))
+
+(defn find-type [input]
+  (to-string (first (split-at-byte 32 input))))
+
