@@ -42,9 +42,10 @@
           rem1 (get (tool/split-at-byte 32 remaining-contents) 1)
           obj-name (tool/to-string (get (tool/split-at-byte 0 rem1) 0))
           rem2 (get (tool/split-at-byte 0 rem1) 1)
-          ]
+          addr (take 20 rem2)]
       (println obj-type)
-      (println obj-name))))
+      (println obj-name)
+      (println (tool/to-hex-string addr)))))
 
 
 
