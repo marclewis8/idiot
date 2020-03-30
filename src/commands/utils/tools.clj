@@ -108,4 +108,3 @@
 
 (defn find-type [input]
   (to-string (first (split-at-byte 32 input))))
-
