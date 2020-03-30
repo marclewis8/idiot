@@ -44,19 +44,21 @@
       (let [mode "100644"
             path (str file)
             address (hash/hash-object dir dbase (list file)) ; skip writing when file is already there
-            entry (str mode " " path "\000" address)]
+            byte-addr (tools/from-hex-string address)
+            entry (concat (.getBytes (str mode " " path "\000")) byte-addr)]
         (println "Didn't write to dbase")
-        (println entry "\n")
-        (.getBytes entry) ; return the bytes of the entry, for concatenation usage
+        ;(println entry "\n")
+        entry ; return the bytes of the entry, for concatenation usage
         )
       ; else
       (let [mode "100644"
             path (str file)
             address (hash/hash-object dir dbase (list "-w" file)) ; do write when file is not already there
-            entry (str mode " " path "\000" address)]
+            byte-addr (tools/from-hex-string address)
+            entry (concat (.getBytes (str mode " " path "\000")) byte-addr)]
         (println "Wrote to dbase")
-        (println entry "\n")
-        (.getBytes entry) ; return the bytes of the entry, for concatenation usage
+        ;(println entry "\n")
+        entry ; return the bytes of the entry, for concatenation usage
         )
       )
     )
@@ -68,10 +70,10 @@
         fullpath dir ; returns a path from dir write-wtree was called on
         pathlist (str/split fullpath (re-pattern (str "\\" File/separator))) ; splits path into individual dir name chunks
         path (nth pathlist (- (count pathlist) 1)) ; takes last path (what i want)
-        entry (str mode " " path "\000" address)]
+        entry (concat (.getBytes (str mode " " path "\000")) address)]
 
-    (println entry)
-    (.getBytes entry)
+    ;(println entry)
+    entry
     ))
 
 (defn dir-to-tree-object-contents [dir dbase]
