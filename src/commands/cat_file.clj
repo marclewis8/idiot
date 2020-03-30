@@ -30,7 +30,7 @@
                 "-p" (case obj-type
                        "blob" (print-blob contents)
                        "tree" (print-tree contents)
-                       "commit" (println "lo"))
+                       "commit" (print-commit contents))
                 "-t" (println obj-type)))))))))
 
 (defn print-blob [contents]
@@ -38,30 +38,21 @@
 
 (defn print-tree [contents]
   (loop [remaining-contents (get (tool/split-at-byte 0 contents) 1) output ""]
-    (let [obj-type (tool/to-string (get (tool/split-at-byte 32 remaining-contents) 0))
-          rem1 (get (tool/split-at-byte 32 remaining-contents) 1)
-          obj-name (tool/to-string (get (tool/split-at-byte 0 rem1) 0))
-          rem2 (get (tool/split-at-byte 0 rem1) 1)
-          addr (take 20 rem2)]
-      (println obj-type)
-      (println obj-name)
-      (println (tool/to-hex-string addr)))))
+    (if (<= (count remaining-contents) 0)
+      (printf "%s", output)
+      (let [obj-num (if (= "40000" (tool/to-string (get (tool/split-at-byte 32 remaining-contents) 0)))
+                       "040000"
+                       (tool/to-string (get (tool/split-at-byte 32 remaining-contents) 0)))
+            obj-type (case obj-num
+                       "040000" "tree"
+                       "100644" "blob")
+            rem1 (get (tool/split-at-byte 32 remaining-contents) 1)
+            obj-name (tool/to-string (get (tool/split-at-byte 0 rem1) 0))
+            rem2 (get (tool/split-at-byte 0 rem1) 1)
+            addr (tool/to-hex-string (take 20 rem2))
+            line (str obj-num " " obj-type " " addr "\t" obj-name "\n")]
+        (recur (drop 20 rem2) (str output line))))))
 
-
-
-;            (let [unzipped-contents+header
-;                  (with-open [input (-> (str dir File/separator dbase File/separator "objects" File/separator dirname File/separator fname) io/file io/input-stream)]
-;                    (tool/unzip input))
-;                  split-contents (str/split unzipped-contents+header (re-pattern "\000"))
-;                  type+length (first split-contents)
-;                  type (first (str/split type+length (re-pattern " ")))
-;                  contents-header-removed (second split-contents)
-;                  contents (str/join contents-header-removed)
-;                  contents-newline-trimmed (clojure.string/trim-newline contents)
-;                  targ-path (str dir File/separator dbase File/separator "objects" File/separator dirname File/separator fname)]
-;              (case flag
-;                ;"-p" (println contents-newline-trimmed)
-;                "-p" (p-print dir dbase targ-path)
-;                "-t" (println (tool/find-type (tool/byte-unzip targ-path)))
-;                )))))))) ; this is what I want
+(defn print-commit [contents]
+  (printf "%s" (tool/to-string (get (tool/split-at-byte 0 contents) 1))))
 

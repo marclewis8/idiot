@@ -54,7 +54,6 @@
                                                   commit-str)
                             commit-object-addr (tool/to-hex-string (tool/sha-bytes (.getBytes commit-object)))]
                         (write-object dir dbase commit-object-addr commit-object)
-                        ;(println commit-object)
                         (println commit-object-addr)))
                     ; Add more parents
                     (let [pname (first parent-list)
@@ -86,7 +85,6 @@
                                             commit-str)
                     commit-object-addr (tool/to-hex-string (tool/sha-bytes (.getBytes commit-object)))]
                 (write-object dir dbase commit-object-addr commit-object)
-                ;(println commit-object)
                 (println commit-object-addr))))))
 
 ; Write object to databse given dir, dbase, address, and object contents.
