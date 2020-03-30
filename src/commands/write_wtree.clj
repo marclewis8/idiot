@@ -98,9 +98,9 @@
           ]
       ;(ByteArrayOutputStream.) nah
       ;(println tree-bytes) ; remove later, just for testing
-      (let [tree-readable (apply str (map char tree-bytes))]
-        (println tree-readable)
-        )
+      ;(let [tree-readable (apply str (map char tree-bytes))]
+      ;  (println tree-readable)
+      ;  )
       (hash-and-store-tree-object dir dbase tree-bytes) ; stores tree object, returns the hash for printing / entry-making
       tree-bytes
 
