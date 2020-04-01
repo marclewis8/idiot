@@ -54,6 +54,7 @@
                                                   commit-str)
                             commit-object-addr (tool/to-hex-string (tool/sha-bytes (.getBytes commit-object)))]
                         (write-object dir dbase commit-object-addr commit-object)
+                        (printf "%s", commit-object)
                         (println commit-object-addr)))
                     ; Add more parents
                     (let [pname (first parent-list)
@@ -62,7 +63,7 @@
                       (if (not (and (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
                                 (.isDirectory (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
                                 (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir File/separator pfname)))))
-                        (println "Error: no commit object exists at address" pname)
+                        (println "Error: no commit object exists at address" pname ".")
                         (if (not (= (tool/find-type (tool/byte-unzip (str dir File/separator dbase File/separator
                                                                           "objects" File/separator pdir File/separator 
                                                                           pfname))) "commit"))
