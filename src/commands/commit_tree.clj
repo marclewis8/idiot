@@ -40,7 +40,7 @@
                             commit-format (str "tree %s\n"
                                                "%s"
                                                "author %s\n"
-                                               "commiter %s\n"
+                                               "committer %s\n"
                                                "\n"
                                                "%s\n")
                             commit-str (format commit-format
@@ -73,7 +73,7 @@
               (let [author-str "Linus Torvalds <torvalds@transmeta.com> 1581997446 -0500"
                     commit-format (str "tree %s\n"
                                        "author %s\n"
-                                       "commiter %s\n"
+                                       "committer %s\n"
                                        "\n"
                                        "%s\n")
                     commit-str (format commit-format
