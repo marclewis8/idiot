@@ -41,8 +41,8 @@
     (if (<= (count remaining-contents) 0)
       (printf "%s", output)
       (let [obj-num (if (= "40000" (tool/to-string (get (tool/split-at-byte 32 remaining-contents) 0)))
-                       "040000"
-                       (tool/to-string (get (tool/split-at-byte 32 remaining-contents) 0)))
+                      "040000"
+                      (tool/to-string (get (tool/split-at-byte 32 remaining-contents) 0)))
             obj-type (case obj-num
                        "040000" "tree"
                        "100644" "blob")

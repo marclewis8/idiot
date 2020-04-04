@@ -1,6 +1,5 @@
 (ns commands.help
-  (:require [commands.utils.help-docs :as hmsg])
-  )
+  (:require [commands.utils.help-docs :as hmsg]))
 ; unlike the other functions, theres no need for help to grab dir or dbase names, even if they were provided
 (defn help [args]
   (let [[flag-or-cmd] args]

@@ -20,16 +20,14 @@
                             (assoc argmap :error? "Y"))
       (not (.isDirectory (io/file desired-dir))) (do
                                                    (println "Error: the directory specified by -r does not exist")
-                                                   (assoc argmap :error? "Y")
-                                                   )
-      )
-    )
-  )
+                                                   (assoc argmap :error? "Y")))))
 
 ; parse-args takes in the whole string, and attempts to parse out the top level arguments, if they were provided.
 ; after this happens, an arglist will be passed back that main deciphers
 ; arglist is of this form (boolean string string list)
 ; boolean -> was an error encountered? string1 -> validated dir name, string2 -> validated dbase name, list -> list of rest of args, including cmd and all local arguments for cmd
+
+
 (defn parse-args [args]
 
   (loop [currargs args is-r-handled false is-d-handled false spec-directory "." spec-dbase ".idiot"]
@@ -48,8 +46,7 @@
                                                                                                   (println "Error: the directory specified by -r does not exist")
                                                                                                   (list true spec-directory spec-dbase more)) ; hit error, exit loop
                                                              :else (recur more true is-d-handled dir spec-dbase) ; recur with is-r-handled now set to true and spec-directory set to dir
-                                                             )
-                                                           )
+                                                             ))
       ; recur case, when a -d is encountered
       (and (= (first currargs) "-d") (not is-d-handled)) (let [[flag database & more] currargs]
                                                            ; set desired file from .idiot to whatever they say
@@ -60,18 +57,16 @@
                                                                                 (list true spec-directory spec-dbase currargs) ; error, get out
                                                                                 )
                                                              :else (recur more is-r-handled true spec-directory database) ; recur with is-h-handled now set to true and spec-dbase set to database
-                                                             )
-                                                           )
+                                                             ))
       (not (contains? top-commands (first currargs))) (do
                                                         (println "Error: invalid command")
-                                                        (list true spec-directory spec-dbase currargs)
-                                                        ) ; last case, will make error? true if it didn't reach a main-parsable command.
+                                                        (list true spec-directory spec-dbase currargs)) ; last case, will make error? true if it didn't reach a main-parsable command.
       :else (list false spec-directory spec-dbase currargs) ; base case #2 to give out an arglist that main can use with 0 or 1 flag applied to it
-      )
-    )
-  )
+      )))
 
 ; evaluate command line arguments and pass to desired functionality
+
+
 (defn -main [& xs]
   ; parse-args gives back a hashmap, this is just grabbing everything and putting a name to it
   (let [arglist (parse-args xs) error? (first arglist) dir (second arglist) dbase (nth arglist 2) [cmd & more] (nth arglist 3)]

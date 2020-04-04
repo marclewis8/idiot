@@ -2,10 +2,13 @@
 
 
 ;;;;; help messages ;;;;;
+
+
 (def top-h-message
   "idiot: the other stupid content tracker
 
 Usage: idiot [<top-args>] <command> [<args>]
+
 Top-level arguments:
    -r <dir>   run from the given directory instead of the current one
    -d <dir>   store the database in <dir> (default: .idiot)

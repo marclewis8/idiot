@@ -4,9 +4,7 @@
   (:import java.security.MessageDigest
            java.util.zip.InflaterInputStream
            java.util.zip.DeflaterOutputStream
-           (java.io ByteArrayInputStream ByteArrayOutputStream)
-           )
-  )
+           (java.io ByteArrayInputStream ByteArrayOutputStream)))
 
 ;;;;; cat utilities ;;;;;
 
@@ -54,6 +52,7 @@
 
 
 ;;;;; write-wtree utilities ;;;;;
+
 
 (defn sha-bytes [bytes]
   (.digest (MessageDigest/getInstance "sha1") bytes))

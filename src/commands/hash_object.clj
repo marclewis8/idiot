@@ -2,10 +2,8 @@
   (:require [commands.utils.tools :as tool]
             [clojure.java.io :as io]
             [commands.utils.help-docs :as hmsg]
-
             )
-  (:import java.io.File)
-  )
+  (:import java.io.File))
 
 (defn hash-object [dir dbase args]
   ; depending on arity of call, do different things
@@ -25,8 +23,7 @@
                                    content+header (str "blob " (count content) "\000" content)
                                    address (tool/sha1-sum content+header)]
                                ;(println address)
-                               (str address))))
-                         )
+                               (str address)))))
     (= (count args) 2) (do
                          (let [[flag file] args]
                            (cond
@@ -46,9 +43,7 @@
                                  (io/copy zipped-content (io/file (str dir File/separator dbase File/separator "objects" File/separator dirname File/separator fname))))
 
                                (str address) ; format so that hash-object returns the address, instead of printing it, for use in other functions
-                               )))
-                         )
-    )
+                               )))))
 
   ;(if (= (count args) 0) (println "Error: you must specify a file.") nil)
   ;
