@@ -32,7 +32,7 @@
               (if (= (count (rest more)) 0)
                 (println "Error: you must specify a commit object with the -p switch.")
                 (loop [parent-entries ""
-                       parent-list (rest more)]
+                       parent-list more]
                   (if (= (count parent-list) 0)
                     ; Done adding parents
                     (do
@@ -57,18 +57,21 @@
                         (printf "%s", commit-object)
                         (println commit-object-addr)))
                     ; Add more parents
-                    (let [pname (first parent-list)
-                          pdir (subs pname 0 2)
-                          pfname (subs pname 2)]
-                      (if (not (and (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
-                                (.isDirectory (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
-                                (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir File/separator pfname)))))
-                        (println "Error: no commit object exists at address" pname ".")
-                        (if (not (= (tool/find-type (tool/byte-unzip (str dir File/separator dbase File/separator
-                                                                          "objects" File/separator pdir File/separator 
-                                                                          pfname))) "commit"))
-                          (println (str "Error: an object exists at address " pname ", but it isn't a commit."))
-                          (recur (str parent-entries (str "parent " (first parent-list) "\n")) (rest parent-list))))))))
+                    (let [pflag (first parent-list)
+                          pname (first (rest parent-list))]
+                      (if (nil? pname)
+                        (println "Error: you must specify a commit object with the -p switch.")
+                        (let [pdir (subs pname 0 2)
+                              pfname (subs pname 2)]
+                          (if (not (and (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
+                                        (.isDirectory (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
+                                        (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir File/separator pfname)))))
+                          (println (str "Error: no commit object exists at address " pname "."))
+                          (if (not (= (tool/find-type (tool/byte-unzip (str dir File/separator dbase File/separator
+                                                                            "objects" File/separator pdir File/separator 
+                                                                            pfname))) "commit"))
+                            (println (str "Error: an object exists at address " pname ", but it isn't a commit."))
+                            (recur (str parent-entries (str "parent " pname "\n")) (rest (rest parent-list)))))))))))
               ; Handle case with no parents
               (let [author-str "Linus Torvalds <torvalds@transmeta.com> 1581997446 -0500"
                     commit-format (str "tree %s\n"
