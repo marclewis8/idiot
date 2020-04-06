@@ -97,11 +97,6 @@
     (io/copy unzipper out)
     (.toByteArray out)))
 
-(defn split-at-byte [b bytes]
-  (let [part1 (take-while (partial not= b) bytes)
-        part2 (nthrest bytes (-> part1 count inc))]
-    [part1 part2]))
-
 (defn to-string [byte-seq]
   (clojure.string/join (map char byte-seq)))
 
