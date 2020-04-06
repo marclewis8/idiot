@@ -1,6 +1,5 @@
 (ns commands.cat-file
   (:require [clojure.java.io :as io]
-            [clojure.string :as str]
             [commands.utils.tools :as tool]
             [commands.utils.help-docs :as hmsg])
   (:import java.io.File))

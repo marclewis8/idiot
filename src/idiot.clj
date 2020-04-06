@@ -1,7 +1,5 @@
 (ns idiot
   (:require [clojure.java.io :as io]
-            [clojure.string :as str]
-            [clojure.java.shell :as shell]
             [commands.cat-file :as do-cat]
             [commands.hash-object :as do-hash]
             [commands.help :as do-help]

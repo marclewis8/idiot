@@ -2,7 +2,6 @@
   (:require [clojure.java.io :as io]
             [commands.utils.help-docs :as hmsg]
             [commands.utils.tools :as tools]
-            [clojure.pprint :refer :all]
             [commands.hash-object :as hash]
             [clojure.string :as str])
 
@@ -17,17 +16,14 @@
 (defn write-entry [dir dbase f] ; returns byte array, processes entry type and passes to appropriate fn
   (cond
     (and (.isDirectory (io/file (str dir File/separator f))) (not (empty? (.list (io/file (str dir File/separator f)))))) ; filter out empty directories
-    (do
       ;(println "Making a tree entry for " f "!")
-      (dir-to-tree-entry (str dir File/separator f) (str ".." File/separator dbase)))
+    (dir-to-tree-entry (str dir File/separator f) (str ".." File/separator dbase))
     (not (.isDirectory (io/file (str dir File/separator f))))
-    (do
       ;(println "Making a blob entry for " f "!")
-      (write-blob-object-and-return-blob-entry dir dbase f)) ;else
+    (write-blob-object-and-return-blob-entry dir dbase f) ;else
     :else
-    (do
       ;(println "Skipping making a tree entry for empty directory " f ".\n")
-      nil)))
+    nil))
 
 (defn write-blob-object-and-return-blob-entry [dir dbase file]
   (let [hash (hash/hash-object dir dbase (list file))
@@ -72,33 +68,25 @@
         str-all (->> all
                      (map str) ; turn them all into strings, should remove java.io.file nonsense
                      (filter (fn [f] (not (.contains f dbase)))) ; filter out the database and all its children
-                     )]
+                     )
+        str-bytes-all (map (fn [f] (write-entry dir dbase f)) str-all) ; should be sequence of byte arrays, with some nils from empty dirs and stuff
+        ;str-bytes-no-nil (filter (fn [f] (not (nil? f))) str-bytes-all) ; the nils that came back from unsuccessful calls are skipped
+        str-bytes-concat (apply concat str-bytes-all) ; should concatenate all bytes together, skipping nils
+        header (str "tree" " " (count str-bytes-concat) "\000") ; header (count str-bytes-concat)
+        header-bytes (.getBytes header) ; make a byte array from that
+        tree-bytes (byte-array (concat header-bytes str-bytes-concat)) ; should put header bytes on front of concat byte array
+        ]
 
-    ;(println "Location of dbase: " dbase)
-    ;(println "Contents of " dir " directory:") ;TESTING MATERIAL
-    ;(pprint str-all)
-    ;(print "\n")
-
-
-    (let [str-bytes-all (map (fn [f] (write-entry dir dbase f)) str-all) ; should be sequence of byte arrays, with some nils from empty dirs and stuff
-          ;str-bytes-no-nil (filter (fn [f] (not (nil? f))) str-bytes-all) ; the nils that came back from unsuccessful calls are skipped
-          str-bytes-concat (apply concat str-bytes-all) ; should concatenate all bytes together, skipping nils
-          header (str "tree" " " (count str-bytes-concat) "\000") ; header (count str-bytes-concat)
-          header-bytes (.getBytes header) ; make a byte array from that
-          tree-bytes (byte-array (concat header-bytes str-bytes-concat)) ; should put header bytes on front of concat byte array
-          ]
       ;(ByteArrayOutputStream.) nah
       ;(println tree-bytes) ; remove later, just for testing
       ;(let [tree-readable (apply str (map char tree-bytes))]
       ;  (println tree-readable)
       ;  )
-      (if (empty? str-bytes-concat)
-        nil
-        (do
-          (hash-and-store-tree-object dir dbase tree-bytes) ; stores tree object, returns the hash for printing / entry-making
-          tree-bytes)))))
-
-
+    (if (empty? str-bytes-concat)
+      nil
+      (do
+        (hash-and-store-tree-object dir dbase tree-bytes) ; stores tree object, returns the hash for printing / entry-making
+        tree-bytes))))
 
 (defn hash-and-store-tree-object [dir dbase tree-bytes]
   (let [tree-hex (tools/to-hex-string (tools/sha-bytes tree-bytes))
@@ -106,8 +94,7 @@
         last38 (subs tree-hex 2 (count tree-hex))]
     (.mkdir (io/file (str dir File/separator dbase File/separator "objects" File/separator first2)))
     (let [zipped-tree (tools/zip-str tree-bytes)]
-      (io/copy zipped-tree (io/file (str dir File/separator dbase File/separator "objects" File/separator first2 File/separator last38)))
-      )
+      (io/copy zipped-tree (io/file (str dir File/separator dbase File/separator "objects" File/separator first2 File/separator last38))))
     tree-hex ; return hash to print / use for address
     ))
 ;TODO make function that takes in contents, and hashes / stores it in dbase
