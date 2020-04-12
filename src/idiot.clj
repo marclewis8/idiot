@@ -6,9 +6,10 @@
             [commands.init :as do-init]
             [commands.commit-tree :as do-ctree]
             [commands.write-wtree :as do-wtree]
-            [commands.utils.help-docs :as hmsg]))
+            [commands.utils.help-docs :as hmsg]
+            [commands.rev-parse :as do-rev-parse]))
 (def top-args #{"-r" "-d"})
-(def top-commands #{"help" "init" "hash-object" "cat-file" "-h" "--help" "commit-tree" "write-wtree" nil})
+(def top-commands #{"help" "init" "hash-object" "cat-file" "-h" "--help" "commit-tree" "write-wtree" "rev-parse" nil})
 
 (defn handle-r [argmap]
   (let [args (get argmap :args) desired-dir (second args)]
@@ -79,4 +80,5 @@
       (= cmd "cat-file") (do-cat/cat-file dir dbase more)
       (= cmd "commit-tree") (do-ctree/commit-tree dir dbase more)
       (= cmd "write-wtree") (do-wtree/write-wtree dir dbase more)
+      (= cmd "rev-parse") (do-rev-parse/rev-parse dir dbase more)
       :else (println hmsg/top-h-message))))

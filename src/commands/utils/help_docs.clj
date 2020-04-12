@@ -84,3 +84,13 @@ Arguments:
    <tree>           the address of the tree object to commit
    -m \"<message>\"   the commit message
    -p <parent>      the address of a parent commit")
+
+(def rev-parse-h-message
+  "idiot rev-parse: determine which commit a ref points to
+
+Usage: idiot rev-parse <ref>
+
+<ref> can be:
+- a branch name, like 'master'
+- literally 'HEAD'
+- literally '@', an alias for 'HEAD'")
