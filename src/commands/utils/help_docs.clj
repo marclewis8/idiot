@@ -94,3 +94,11 @@ Usage: idiot rev-parse <ref>
 - a branch name, like 'master'
 - literally 'HEAD'
 - literally '@', an alias for 'HEAD'")
+
+(def switch-h-message
+  "idiot switch: change what HEAD points to
+
+Usage: idiot switch [-c] <branch>
+
+Arguments:
+   -c   create the branch before switching to it")
