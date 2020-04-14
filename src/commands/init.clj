@@ -13,5 +13,6 @@
               (.mkdir (io/file (str dir File/separator dbase)))
               (.mkdir (io/file (str dir File/separator dbase File/separator "objects")))
               (.mkdir (io/file (str dir File/separator dbase File/separator "refs")))
-              (io/copy "ref: refs/heads/master\n" (io/file (str dir File/separator dbase File/separator "refs" File/separator "HEAD")))
+              (.mkdir (io/file (str dir File/separator dbase File/separator "refs" File/separator "heads")))
+              (io/copy "ref: refs/heads/master\n" (io/file (str dir File/separator dbase File/separator "HEAD")))
               (println (str "Initialized empty Idiot repository in " dbase " directory"))))))
