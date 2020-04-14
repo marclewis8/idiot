@@ -16,10 +16,10 @@
               (.isDirectory (io/file (str dir File/separator dbase)))))
     (println "Error: could not find database. (Did you run `idiot init`?)")
     :else (let [ref-name (first args)
-                refs-path (str dir File/separator dbase File/separator "refs" File/separator)]
+                refs-path (str dir File/separator dbase File/separator "refs" File/separator "heads" File/separator)]
             (if (or (= ref-name "HEAD")
                     (= ref-name "@"))
-              (let [ref-contents (slurp (io/file (str refs-path "HEAD")))
+              (let [ref-contents (slurp (io/file (str dir File/separator dbase File/separator "HEAD")))
                     isRef (= (subs ref-contents 0 4) "ref:")]
                 (if isRef
                   (print-ref dir dbase refs-path (clojure.string/trim-newline (subs ref-contents 16)))
