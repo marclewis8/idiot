@@ -3,7 +3,6 @@
 
 ;;;;; help messages ;;;;;
 
-
 (def top-h-message
   "idiot: the other stupid content tracker
 
@@ -14,12 +13,16 @@ Top-level arguments:
    -d <dir>   store the database in <dir> (default: .idiot)
 
 Commands:
+   branch [-d <branch>]
+   cat-file {-p|-t} <address>
+   commit <tree> -m \"message\" [(-p parent)...]
+   commit-tree <tree> -m \"message\" [(-p parent)...]
+   hash-object [-w] <file>
    help
    init
-   hash-object [-w] <file>
-   cat-file {-p|-t} <address>
-   write-wtree
-   commit-tree <tree> -m \"<message>\" [(-p <parent>)...]")
+   rev-parse <ref>
+   switch [-c] <branch>
+   write-wtree")
 
 (def help-h-message
   "idiot help: print help for a command
@@ -30,12 +33,16 @@ Arguments:
    <command>   the command to print help for
 
 Commands:
+   branch [-d <branch>]
+   cat-file {-p|-t} <address>
+   commit <tree> -m \"message\" [(-p parent)...]
+   commit-tree <tree> -m \"message\" [(-p parent)...]
+   hash-object [-w] <file>
    help
    init
-   hash-object [-w] <file>
-   cat-file {-p|-t} <address>
-   write-wtree
-   commit-tree <tree> -m \"<message>\" [(-p <parent>)...]")
+   rev-parse <ref>
+   switch [-c] <branch>
+   write-wtree")
 
 (def init-h-message
   "idiot init: initialize a new database
@@ -110,3 +117,14 @@ Usage: idiot branch [-d <branch>]
 
 Arguments:
    -d <branch>   delete branch <branch>")
+
+(def commit-h-message
+  "idiot commit: create a commit and advance the current branch
+
+Usage: idiot commit <tree> -m \"message\" [(-p parent)...]
+
+Arguments:
+   -h               print this message
+   <tree>           the address of the tree object to commit
+   -m \"<message>\"   the commit message
+   -p <parent>      the address of a parent commit")
