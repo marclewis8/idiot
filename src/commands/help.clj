@@ -12,4 +12,8 @@
       (= flag-or-cmd "cat-file") (println hmsg/cat-h-message)
       (= flag-or-cmd "write-wtree") (println hmsg/write-h-message)
       (= flag-or-cmd "commit-tree") (println hmsg/commit-tree-h-message)
+      (= flag-or-cmd "rev-parse") (println hmsg/rev-parse-h-message)
+      (= flag-or-cmd "switch") (println hmsg/switch-h-message)
+      (= flag-or-cmd "branch") (println hmsg/branch-h-message)
+      (= flag-or-cmd "commit") (println hmsg/commit-h-message)
       :else (println "Error: invalid command"))))
