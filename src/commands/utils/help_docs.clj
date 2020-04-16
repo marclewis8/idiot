@@ -102,3 +102,11 @@ Usage: idiot switch [-c] <branch>
 
 Arguments:
    -c   create the branch before switching to it")
+
+(def branch-h-message
+  "idiot branch: list or delete branches
+
+Usage: idiot branch [-d <branch>]
+
+Arguments:
+   -d <branch>   delete branch <branch>")
