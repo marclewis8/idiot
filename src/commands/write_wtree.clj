@@ -15,7 +15,7 @@
 
 (defn write-entry [dir dbase f] ; returns byte array, processes entry type and passes to appropriate fn
   (cond
-    (and (.isDirectory (io/file (str dir File/separator f))) (not (empty? (.list (io/file (str dir File/separator f)))))) ; filter out empty directories
+    (and (.isDirectory (io/file (str dir File/separator f))) (not-empty (.list (io/file (str dir File/separator f))))) ; filter out empty directories
       ;(println "Making a tree entry for " f "!")
     (dir-to-tree-entry (str dir File/separator f) (str ".." File/separator dbase))
     (not (.isDirectory (io/file (str dir File/separator f))))

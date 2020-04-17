@@ -1,6 +1,5 @@
 (ns commands.switch
   (:require [clojure.java.io :as io]
-            [commands.utils.tools :as tool]
             [commands.utils.help-docs :as hmsg]
             [clojure.string :as String])
   (:import java.io.File))
@@ -14,8 +13,8 @@
     (= (first args) "--help") (println hmsg/switch-h-message)
     (and (= (first args) "-c") (> (count args) 2)) (println "Error: you may only specify one branch name.")
     (not (and (.exists (io/file (str dir File/separator dbase)))
-                  (.isDirectory (io/file (str dir File/separator dbase)))))
-      (println "Error: could not find database. (Did you run `idiot init`?)")
+              (.isDirectory (io/file (str dir File/separator dbase)))))
+    (println "Error: could not find database. (Did you run `idiot init`?)")
     :else (if (= (first args) "-c")
             ; -c flag
             (if (> (count args) 2)
@@ -31,8 +30,7 @@
                       (do
                         (create-ref dir dbase ref-name)
                         (update-head dir dbase ref-name)
-                        (println (str "Switched to a new branch '" ref-name "'")))
-                    )))))
+                        (println (str "Switched to a new branch '" ref-name "'"))))))))
             ; no -c flag
             (if (> (count args) 1)
               (println "Error: you may only specify one branch name.")
