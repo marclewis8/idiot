@@ -3,6 +3,7 @@
 
 ;;;;; help messages ;;;;;
 
+
 (def top-h-message
   "idiot: the other stupid content tracker
 

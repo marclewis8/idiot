@@ -10,7 +10,7 @@
 (defn commit [dir dbase args]
   (let [[tree mflag msg & more] args]
     (cond
-      (or (= tree "-h") (= tree "--help")) (println hmsg/commit-h-message)
+      (or (= (first args) "-h") (= (first args) "--help")) (println hmsg/commit-h-message)
       (not (.exists (io/file (str dir File/separator dbase)))) (println "Error: could not find database. (Did you run `idiot init`?)")
       (or (nil? tree) (= tree "-m")) (println "Error: you must specify a tree address.")
       (or (not (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator (subs tree 0 2)))))
@@ -54,7 +54,6 @@
                                                 commit-str)
                           commit-object-addr (tool/to-hex-string (tool/sha-bytes (.getBytes commit-object)))]
                       (write-object dir dbase commit-object-addr commit-object)
-                      ;(printf "%s", commit-object)
                       (println "Commit created.")
                       (commit-logic dir dbase commit-object-addr))
                     ; Add more parents
@@ -123,4 +122,5 @@
     (when is-ref
       (let [head-ref (String/trim-newline (subs head-contents 16))
             head-ref-path (str refs-path head-ref)]
-        (io/copy (str commit-addr "\n") (io/file head-ref-path))))))
+        (io/copy (str commit-addr "\n") (io/file head-ref-path))
+        (println (str "Updated branch " head-ref "."))))))

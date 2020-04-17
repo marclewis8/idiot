@@ -37,7 +37,7 @@
       ; base case #1, when both potential flags have been encountered and handled
       (and is-d-handled is-r-handled) (list false spec-directory spec-dbase currargs)
       ; recur case, when a -r is encountered
-      (and (= (first currargs) "-r") (not is-r-handled)) (let [[flag dir & more] currargs]
+      (and (= (first currargs) "-r") (not is-r-handled)) (let [[_ dir & more] currargs]
                                                            ; set desired directory from . to whatever they say and recur with rest
                                                            ;handle edge / failure cases
                                                            (cond
@@ -50,7 +50,7 @@
                                                              :else (recur more true is-d-handled dir spec-dbase) ; recur with is-r-handled now set to true and spec-directory set to dir
                                                              ))
       ; recur case, when a -d is encountered
-      (and (= (first currargs) "-d") (not is-d-handled)) (let [[flag database & more] currargs]
+      (and (= (first currargs) "-d") (not is-d-handled)) (let [[_ database & more] currargs]
                                                            ; set desired file from .idiot to whatever they say
                                                            ;handle edge / failure cases
                                                            (cond

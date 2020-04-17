@@ -14,13 +14,12 @@
     (and (not= (first args) "-d") (> (count args) 0)) (println "Error: invalid arguments.")
     (not (and (.exists (io/file (str dir File/separator dbase)))
               (.isDirectory (io/file (str dir File/separator dbase)))))
-      (println "Error: could not find database. (Did you run `idiot init`?")
+    (println "Error: could not find database. (Did you run `idiot init`?)")
     :else (let [head-contents (slurp (io/file (str dir File/separator dbase File/separator "HEAD")))
-                head-ref (str (String/trim-newline (subs head-contents 16)))
                 refs-path (str dir File/separator dbase File/separator "refs" File/separator "heads" File/separator)]
             (if (= (first args) "-d")
-              (delete-branch refs-path head-ref (first (rest args)))
-              (print-refs head-ref refs-path)))))
+              (delete-branch refs-path (String/trim-newline (subs head-contents 16)) (first (rest args)))
+              (print-refs head-contents refs-path)))))
 
 (defn delete-branch [refs-path head-ref ref-to-del]
   (if (not (.exists (io/file (str refs-path ref-to-del))))
@@ -28,15 +27,15 @@
     (if (= head-ref ref-to-del)
       (println (str "Error: cannot delete checked-out branch '" head-ref "'."))
       (do
-         (io/delete-file (str refs-path ref-to-del))
-         (println (str "Deleted branch " ref-to-del "."))))))
+        (io/delete-file (str refs-path ref-to-del))
+        (println (str "Deleted branch " ref-to-del "."))))))
 
 (defn print-refs [head-ref refs-path]
   (loop [refs (sort (seq (.list (io/file refs-path))))]
     (if (empty? refs)
       nil
       (do
-        (if (= head-ref (first refs))
+        (if (String/includes? head-ref (first refs))
           (println (str "* " (first refs)))
           (println (str "  " (first refs))))
         (recur (rest refs))))))
