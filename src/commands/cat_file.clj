@@ -1,7 +1,9 @@
 (ns commands.cat-file
   (:require [clojure.java.io :as io]
             [commands.utils.tools :as tool]
-            [commands.utils.help-docs :as hmsg])
+            [commands.utils.help-docs :as hmsg]
+            [commands.utils.tools :as tools]
+            [clojure.string :as str])
   (:import java.io.File))
 
 (declare print-blob print-tree print-commit)
@@ -16,8 +18,11 @@
       (= address nil) (println "Error: you must specify an address")
       ; check existence of address in database
       :else
-      (let [dirname (subs address 0 2)
-            fname (subs address 2)]
+      (if (str/includes? (tools/abbrev-to-full-hash dir dbase address) "Error") ; before expansion, check if expansion works
+        (println (tools/abbrev-to-full-hash dir dbase address))
+        (let [expand-addr (tools/abbrev-to-full-hash dir dbase address)
+            dirname (subs expand-addr 0 2)
+            fname (subs expand-addr 2)]
         (if (not (.isDirectory (io/file (str dir File/separator dbase File/separator "objects" File/separator dirname))))
           (println "Error: that address doesn't exist")
           (if (not (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator dirname File/separator fname))))
@@ -30,7 +35,7 @@
                        "blob" (print-blob contents)
                        "tree" (print-tree contents)
                        "commit" (print-commit contents))
-                "-t" (println obj-type)))))))))
+                "-t" (println obj-type))))))))))
 
 (defn print-blob [contents]
   (printf "%s" (tool/to-string (get (tool/split-at-byte 0 contents) 1))))
