@@ -18,9 +18,12 @@ Commands:
    cat-file {-p|-t} <address>
    commit <tree> -m \"message\" [(-p parent)...]
    commit-tree <tree> -m \"message\" [(-p parent)...]
+   explore [-p <port>]
    hash-object [-w] <file>
    help
    init
+   log --oneline [-n <count>] [<ref>]
+   rev-list [-n <count>] [<ref>]
    rev-parse <ref>
    switch [-c] <branch>
    write-wtree")
@@ -38,9 +41,12 @@ Commands:
    cat-file {-p|-t} <address>
    commit <tree> -m \"message\" [(-p parent)...]
    commit-tree <tree> -m \"message\" [(-p parent)...]
+   explore [-p <port>]
    hash-object [-w] <file>
    help
    init
+   log --oneline [-n <count>] [<ref>]
+   rev-list [-n <count>] [<ref>]
    rev-parse <ref>
    switch [-c] <branch>
    write-wtree")
@@ -129,3 +135,34 @@ Arguments:
    <tree>           the address of the tree object to commit
    -m \"<message>\"   the commit message
    -p <parent>      the address of a parent commit")
+
+(def rev-list-h-message
+
+  "idiot rev-list: list preceding revisions, latest first
+
+Usage: idiot rev-list [-n <count>] [<ref>]
+
+Arguments:
+   -n <count>   stop after <count> revisions (default: don't stop)
+   <ref>        a reference; see the rev-parse command (default: HEAD)"
+
+  )
+
+(def explore-h-message
+  "idiot explore: start a web server to explore the database
+
+Usage: idiot explore [-p <port>]
+
+Arguments:
+   -p <port>   listen on the given port (default: 3000)"
+  )
+
+(def log-h-message
+  "idiot log: print abbreviated commit addresses and commit summaries
+
+Usage: idiot log --oneline [-n <count>] [<ref>]
+
+Arguments:
+   -n <count>   stop after <count> revisions (default: don't stop)
+   <ref>        a reference; see the rev-parse command (default: HEAD)"
+  )
