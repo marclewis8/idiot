@@ -1,7 +1,9 @@
 (ns commands.utils.tools
   (:require [clojure.java.io :as io]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.pprint :as pprint])
   (:import java.security.MessageDigest
+           java.io.File
            java.util.zip.InflaterInputStream
            java.util.zip.DeflaterOutputStream
            (java.io ByteArrayInputStream ByteArrayOutputStream)))
@@ -102,3 +104,27 @@
 
 (defn find-type [input]
   (to-string (first (split-at-byte 32 input))))
+
+; this function takes in the working directory and database (which are both assumed to exist), as well as the abbreviated address, and returns
+; 1. the full address, if any, or
+; 2. NIL if it doesn't work. maybe will pass the error string based on what went wrong. can return more if utility demands it
+
+(defn abbrev-to-full-hash [dir dbase abbrev]
+  (cond
+    (>= (count abbrev) 40) (println "That's not a valid address")
+    (< (count abbrev) 4) (println "Not enough characters specified")
+    :else (let [dirname (subs abbrev 0 2)
+                fname (subs abbrev 2)
+                targetdir (str dir File/separator dbase File/separator "objects" File/separator dirname)
+                targetfileabbrev (str targetdir File/separator fname)]
+            (if (not (.isDirectory (io/file targetdir)))
+              (println "Error: that address doesn't exist as a dir") ; checking for directory existence
+              (let [all-files (map str (.list (io/file targetdir)))
+                    matches (filter (fn [x] (= (subs x 0 (count fname)) fname)) all-files)]
+                ;(pprint/pprint all-files)
+                ;(println matches)
+                (case (count matches)
+                  0 "Error: that address doesn't exist as a file"
+                  1 (str dirname (first matches)) ; returns the entire file name
+                  "Error: ambiguous" ; equiv to else, catches all other nums
+                  ))))))
