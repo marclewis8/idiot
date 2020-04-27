@@ -39,7 +39,7 @@
                     (print-rev-list dir dbase refs-path ref-path))
                   (let [ref-path (str refs-path ref-name)]
                     (if (not (.exists (io/file ref-path)))
-                      (println (str "Error: could not find ref " ref-name "."))
+                      (println (str "Error: could not find ref named " ref-name "."))
                       (print-rev-list dir dbase refs-path ref-path)))))))))
 
 (defn print-rev-list-n [dir dbase refs-path ref-path n]
