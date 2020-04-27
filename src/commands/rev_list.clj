@@ -9,7 +9,6 @@
 
 (defn rev-list [dir dbase args]
   (cond
-    (= (count args) 0) (println "Error: you must specify a branch name.")
     (= (first args) "-h") (println hmsg/rev-list-h-message)
     (= (first args) "--help") (println hmsg/rev-list-h-message)
     (not (and (.exists (io/file (str dir File/separator dbase)))
@@ -26,7 +25,7 @@
               (let [[_ z ref-name &more] args
                     n (get-int z)]
                 (when (> n 0)
-                  (if (or (= ref-name "HEAD") (= ref-name "@"))
+                  (if (or (nil? ref-name) (= ref-name "HEAD") (= ref-name "@"))
                     (let [ref-path (str dir File/separator dbase File/separator "HEAD")]
                       (print-rev-list-n dir dbase refs-path ref-path n))
                     (let [ref-path (str refs-path ref-name)]
@@ -34,7 +33,7 @@
                         (println (str "Error: could not find ref named " ref-name "."))
                         (print-rev-list-n dir dbase refs-path ref-path n))))))
               (let [ref-name (first args)]
-                (if (or (= ref-name "HEAD") (= ref-name "@"))
+                (if (or (nil? ref-name) (= ref-name "HEAD") (= ref-name "@"))
                   (let [ref-path (str dir File/separator dbase File/separator "HEAD")]
                     (print-rev-list dir dbase refs-path ref-path))
                   (let [ref-path (str refs-path ref-name)]
