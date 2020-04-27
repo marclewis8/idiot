@@ -10,9 +10,10 @@
             [commands.rev-parse :as do-rev-parse]
             [commands.switch :as do-switch]
             [commands.branch :as do-branch]
-            [commands.commit :as do-commit]))
+            [commands.commit :as do-commit]
+            [commands.rev-list :as do-rev-list]))
 (def top-args #{"-r" "-d"})
-(def top-commands #{"help" "init" "hash-object" "cat-file" "-h" "--help" "commit-tree" "write-wtree" "rev-parse" "switch" "branch" "commit" nil})
+(def top-commands #{"help" "init" "hash-object" "cat-file" "-h" "--help" "commit-tree" "write-wtree" "rev-parse" "switch" "branch" "commit" "rev-list" nil})
 
 (defn handle-r [argmap]
   (let [args (get argmap :args) desired-dir (second args)]
@@ -87,4 +88,5 @@
       (= cmd "switch") (do-switch/switch dir dbase more)
       (= cmd "branch") (do-branch/branch dir dbase more)
       (= cmd "commit") (do-commit/commit dir dbase more)
+      (= cmd "rev-list") (do-rev-list/rev-list dir dbase more)
       :else (println hmsg/top-h-message))))

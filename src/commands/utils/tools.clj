@@ -111,7 +111,7 @@
 (defn abbrev-to-full-hash [dir dbase abbrev]
   (cond
     (> (count abbrev) 40) "Error: That's not a valid address"
-    (< (count abbrev) 4) (str "Error: Not enough characters specified for address '" abbrev "'")
+    (< (count abbrev) 4) (str "Error: too few characters specified for address '" abbrev "'")
     (= (count abbrev) 40) abbrev ; just return the abbreviation as a no-op, so we can unconditionally call it everywhere!
     :else (let [dirname (subs abbrev 0 2)
                 fname (subs abbrev 2)
