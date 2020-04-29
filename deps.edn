@@ -1,4 +1,4 @@
-{:deps {}
+{:deps {ring {:mvn/version "1.8.0"}}
  :paths ["src" "classes" "spec"]
  :aliases
  {:test {:extra-deps {speclj
