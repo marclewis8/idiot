@@ -126,5 +126,5 @@
                 (case (count matches)
                   0 "Error: that address doesn't exist"
                   1 (str dirname (first matches)) ; returns the entire file name
-                  "Error: ambiguous match for address '" abbrev "'" ; equiv to else, catches all other nums
+                  :else (str "Error: ambiguous match for address '" abbrev "'") ; equiv to else, catches all other nums
                   ))))))
