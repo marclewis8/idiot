@@ -10,16 +10,17 @@
 
 (defn cat-file [dir dbase args]
   ; working off of arity 2
-  (let [[flag address] args]
+  (let [[flag address-abb] args
+        address (tools/abbrev-to-full-hash dir dbase address-abb)]
     (cond
       (or (= flag "-h") (= flag "--help")) (println hmsg/cat-h-message)
       (not (.isDirectory (io/file (str dir File/separator dbase)))) (println "Error: could not find database. (Did you run `idiot init`?)")
       (and (not= flag "-p") (not= flag "-t")) (println "Error: the -p or -t switch is required")
-      (= address nil) (println "Error: you must specify an address")
+      (= address-abb nil) (println "Error: you must specify an address")
       ; check existence of address in database
       :else
-      (if (str/includes? (tools/abbrev-to-full-hash dir dbase address) "Error") ; before expansion, check if expansion works
-        (println (tools/abbrev-to-full-hash dir dbase address))
+      (if (str/includes? address "Error") ; before expansion, check if expansion works
+        (println address)
         (let [expand-addr (tools/abbrev-to-full-hash dir dbase address)
             dirname (subs expand-addr 0 2)
             fname (subs expand-addr 2)]

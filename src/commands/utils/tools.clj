@@ -123,8 +123,8 @@
                     matches (filter (fn [x] (= (subs x 0 (count fname)) fname)) all-files)]
                 ;(pprint/pprint all-files)
                 ;(println matches)
-                (case (count matches)
-                  0 "Error: that address doesn't exist"
-                  1 (str dirname (first matches)) ; returns the entire file name
+                (cond
+                  (= (count matches) 0) "Error: that address doesn't exist"
+                  (= (count matches) 1) (str dirname (first matches)) ; returns the entire file name
                   :else (str "Error: ambiguous match for address '" abbrev "'") ; equiv to else, catches all other nums
                   ))))))
