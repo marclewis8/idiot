@@ -17,7 +17,7 @@
                     <title>Test</title>
                   </head>
                   <body>
-                    <p> (get-branches-from-dir dir dbase) </p>
+                    <p> " (get-branches-from-dir dir dbase) " </p>
                   </body>
                 </html>")}) ; any valid html will work here. TODO get hiccup conversion
 
@@ -35,7 +35,7 @@
   (def dbase dbase)
   (if (= (count more) 0)
     (do
-      (println "Starting server on port 3000.")
+      (printf "%s" "Starting server on port 3000.")
       (run-jetty handler {:port 3000})
       )
     (let [flag (first more)]
@@ -48,7 +48,7 @@
                 (if (or (not= (type port) (type 30)) (not (> port 0)))
                   (println "Error: The argument for '-p' must be a non-negative integer.")
                   (do
-                    (println "Starting server on port " port ".")
+                    (println (str "Starting server on port " (str port) "."))
                     (run-jetty handler {:port port})
                     )
                   )
