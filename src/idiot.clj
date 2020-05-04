@@ -92,9 +92,6 @@
       (= cmd "branch") (do-branch/branch dir dbase more)
       (= cmd "commit") (do-commit/commit dir dbase more)
       (= cmd "rev-list") (do-rev-list/rev-list dir dbase more)
-<<<<<<< HEAD
-      (= cmd "explore") (do-explore/explore dir dbase more);
-=======
+      (= cmd "explore") (do-explore/explore dir dbase more)
       (= cmd "log") (do-log/log dir dbase more)
->>>>>>> 412259d... Fixed abbrev?
       :else (println hmsg/top-h-message))))
