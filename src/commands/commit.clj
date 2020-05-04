@@ -8,11 +8,13 @@
 (declare write-object commit-logic)
 
 (defn commit [dir dbase args]
-  (let [[tree mflag msg & more] args]
+  (let [[tree-abb mflag msg & more] args
+        tree (tool/abbrev-to-full-hash dir dbase tree-abb)]
     (cond
       (or (= (first args) "-h") (= (first args) "--help")) (println hmsg/commit-h-message)
       (not (.exists (io/file (str dir File/separator dbase)))) (println "Error: could not find database. (Did you run `idiot init`?)")
-      (or (nil? tree) (= tree "-m")) (println "Error: you must specify a tree address.")
+      (or (nil? tree-abb) (= tree-abb "-m")) (println "Error: you must specify a tree address.")
+      (String/includes? tree "Error") (println tree)
       (or (not (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator (subs tree 0 2)))))
           (not (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator (subs tree 0 2) File/separator (subs tree 2))))))
       (println "Error: no tree object exists at that address.")
@@ -57,20 +59,23 @@
                       (println "Commit created.")
                       (commit-logic dir dbase commit-object-addr))
                     ; Add more parents
-                    (let [pname (first (rest parent-list))]
-                      (if (nil? pname)
+                    (let [pname-abb (first (rest parent-list))]
+                      (if (nil? pname-abb)
                         (println "Error: you must specify a commit object with the -p switch.")
-                        (let [pdir (subs pname 0 2)
+                        (let [pname (tool/abbrev-to-full-hash dir dbase pname-abb)
+                              pdir (subs pname 0 2)
                               pfname (subs pname 2)]
-                          (if (not (and (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
-                                        (.isDirectory (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
-                                        (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir File/separator pfname)))))
-                            (println (str "Error: no commit object exists at address " pname "."))
-                            (if (not (= (tool/find-type (tool/byte-unzip (str dir File/separator dbase File/separator
-                                                                              "objects" File/separator pdir File/separator
-                                                                              pfname))) "commit"))
-                              (println (str "Error: an object exists at address " pname ", but it isn't a commit."))
-                              (recur (str parent-entries (str "parent " pname "\n")) (rest (rest parent-list)))))))))))
+                          (if (String/includes? pname "Error")
+                            (println pname)
+                            (if (not (and (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
+                                          (.isDirectory (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir)))
+                                          (.exists (io/file (str dir File/separator dbase File/separator "objects" File/separator pdir File/separator pfname)))))
+                              (println (str "Error: no commit object exists at address " pname "."))
+                              (if (not (= (tool/find-type (tool/byte-unzip (str dir File/separator dbase File/separator
+                                                                                "objects" File/separator pdir File/separator
+                                                                                pfname))) "commit"))
+                                (println (str "Error: an object exists at address " pname ", but it isn't a commit."))
+                                (recur (str parent-entries (str "parent " pname "\n")) (rest (rest parent-list))))))))))))
               ; Handle case with no parents
               (let [author-str "Linus Torvalds <torvalds@transmeta.com> 1581997446 -0500"
                     commit-format (str "tree %s\n"

@@ -12,9 +12,11 @@
             [commands.branch :as do-branch]
             [commands.commit :as do-commit]
             [commands.rev-list :as do-rev-list]
-            [commands.explore :as do-explore]))
+            [commands.explore :as do-explore]
+            [commands.log :as do-log]))
+
 (def top-args #{"-r" "-d"})
-(def top-commands #{"help" "init" "hash-object" "cat-file" "-h" "--help" "commit-tree" "write-wtree" "rev-parse" "switch" "branch" "commit" "rev-list" "explore" nil})
+(def top-commands #{"help" "init" "hash-object" "cat-file" "-h" "--help" "commit-tree" "write-wtree" "rev-parse" "switch" "branch" "commit" "rev-list" "log" "explore" nil})
 
 (defn handle-r [argmap]
   (let [args (get argmap :args) desired-dir (second args)]
@@ -90,5 +92,9 @@
       (= cmd "branch") (do-branch/branch dir dbase more)
       (= cmd "commit") (do-commit/commit dir dbase more)
       (= cmd "rev-list") (do-rev-list/rev-list dir dbase more)
+<<<<<<< HEAD
       (= cmd "explore") (do-explore/explore dir dbase more);
+=======
+      (= cmd "log") (do-log/log dir dbase more)
+>>>>>>> 412259d... Fixed abbrev?
       :else (println hmsg/top-h-message))))
